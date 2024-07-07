@@ -33,7 +33,7 @@ class processor:
         return(Point(coords[0], coords[1], img))
     
 class Point:
-    def __init__(self, longitude, latitude, img):
+    def __init__(self, latitude, longitude, img):
         self.lng = longitude
         self.lat = latitude
         self.img = img
@@ -42,8 +42,8 @@ class Plotter:
     def __init__(self):
         self.lngs = None
         self.lats = None
-        self.c_lat = 43.6532
-        self.c_lng = -79.3832
+        self.c_lng = 0.0
+        self.c_lat = 0.0
         self.map = None
 
     def set_center(self):
@@ -88,8 +88,10 @@ def main():
 
     plt = Plotter()
     plt.set_points(points)
+    plt.set_map()
+    plt.plot_scatter()
     plt.export()
-    print(plt.map.get())
+    print(plt.c_lat, ",", plt.c_lng)
     
 
 if __name__ == '__main__':
