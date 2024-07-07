@@ -45,24 +45,39 @@ class Plotter:
         self.c_lng = 0.0
         self.c_lat = 0.0
         self.map = None
+        self.bounds = {
+            'north' : 10.0,
+            'south' : -10.0,
+            'east' : 20.0,
+            'west' : -20.0
+        }
 
     def set_center(self):
         self.c_lng = sum(self.lngs) / len(self.lngs)
         self.c_lat = sum(self.lats) / len(self.lats)
-        self.set_map()
+
+    def set_bounds(self):
+        self.bounds = {
+            'north' : max(self.lats),
+            'south' : min(self.lats),
+            'east' : max(self.lngs),
+            'west' : min(self.lngs)
+        }
 
     def set_map(self):
-        self.map = gmplot.GoogleMapPlotter(self.c_lat, self.c_lng, 13, apikey=API_KEY)
+        self.map = gmplot.GoogleMapPlotter(self.c_lat, self.c_lng, 13, apikey=API_KEY, fit_bounds=self.bounds)
     
     def set_points(self, points):
         self.lats = [p.lat for p in points]
         self.lngs = [p.lng for p in points]
         self.set_center()
+        self.set_bounds()
     
     def add_point(self, point):
         self.lngs.append(point.lng)
         self.lats.append(point.lat)
         self.set_center()
+        self.set_bounds()
         
     def plot_heatmap(self):
         try:
@@ -92,6 +107,7 @@ def main():
     plt.plot_scatter()
     plt.export()
     print(plt.c_lat, ",", plt.c_lng)
+    print(plt.bounds)
     
 
 if __name__ == '__main__':
