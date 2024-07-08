@@ -92,7 +92,7 @@ class Plotter:
             print('No map object initialized.')
         
     def export(self):
-        self.map.draw('map.html')
+        self.map.draw('templates/map.html')
 
 
 def main():
