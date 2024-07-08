@@ -94,7 +94,6 @@ class Plotter:
     def export(self):
         self.map.draw('templates/map.html')
 
-
 def main():
     pro = processor()
     points = []

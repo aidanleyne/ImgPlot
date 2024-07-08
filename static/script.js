@@ -1,5 +1,6 @@
 // Drag and Drop functionality
 const dropzone = document.getElementById('dropzone');
+const fileInput = document.getElementById('file-input');
 const imageContainer = document.querySelector('.image-container');
 const fullscreenView = document.getElementById('fullscreen-view');
 const fullscreenImage = document.getElementById('fullscreen-image');
@@ -20,6 +21,27 @@ dropzone.addEventListener('drop', (e) => {
     dropzone.style.borderColor = '#ccc';
 
     const files = e.dataTransfer.files;
+    handleFiles(files);
+});
+
+dropzone.addEventListener('click', () => {
+    fileInput.click();
+});
+
+fileInput.addEventListener('change', (e) => {
+    const files = e.target.files;
+    handleFiles(files);
+});
+
+fullscreenBackground.addEventListener('click', () => {
+    fullscreenView.style.display = 'none';
+});
+
+closeFullscreenButton.addEventListener('click', () => {
+    fullscreenView.style.display = 'none';
+});
+
+function handleFiles(files) {
     for (const file of files) {
         if (file.type.startsWith('image/')) {
             const reader = new FileReader();
@@ -31,16 +53,27 @@ dropzone.addEventListener('drop', (e) => {
                     fullscreenView.style.display = 'flex';
                 });
                 imageContainer.appendChild(img);
+                uploadFile(file);
             };
             reader.readAsDataURL(file);
         }
     }
-});
+}
 
-fullscreenBackground.addEventListener('click', () => {
-    fullscreenView.style.display = 'none';
-});
+function uploadFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
 
-closeFullscreenButton.addEventListener('click', () => {
-    fullscreenView.style.display = 'none';
-});
+    fetch('/upload', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Optionally, update the map or handle the response
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
